@@ -63,6 +63,39 @@ async function loadPosts(){
 
 }
 
+// update
+// window.onload = async function postUpdate() {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const postId = urlParams.get('post_id');
+//     console.log(postId)
+
+//     const response = await getPosts(postId);
+//     console.log(response)
+
+//     const updateButton = document.createElement('button')
+//     updateButton.innerHTML = "수정"
+//     updateButton.setAttribute("onclick", handleUpdate(postId))
+//     updateButton.setAttribute("id", `${response.id}th-item-update-button`)
+
+// like
+
+function getLike(e) {
+    const like_cnt = document.getElementById('like').onclick == function() {
+        const cnt = 0;
+        like_cnt = cnt++;
+        like_cnt = like_cnt % 2 == 0 ? like_cnt+=1 : like_cnt-=1
+    }
+    const liked = 
+}
+
+// async function viewLike() {
+//     const liked = await 
+
+
+//     const like_cnt = document.getElementById('like')
+// }
+
+
 window.onload = async function (){
     const urlParams = new URLSearchParams(window.location.search);
     postId = urlParams.get("post_id");

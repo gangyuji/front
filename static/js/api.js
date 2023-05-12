@@ -1,4 +1,4 @@
-const frontend_base_url = "http://127.0.0.1:5500"
+const frontend_base_url = "http://127.0.0.1:5501"
 const backend_base_url = "http://127.0.0.1:8000"
 
 window.onload = () => {
@@ -163,6 +163,28 @@ async function getPost(postId) {
         alert(response.statusText)
     }
 }
+
+// update
+async function handleUpdate() {
+    const title = document.getElementById('post-title')
+    const img = document.getElementById('post-image')
+    const content = document.getElementById('post-content')
+    console.log(title, img, content)
+
+    const response = await fetch(`${backend_base_url}/posts/${response.postId}`, {
+        headers: {
+            'content-tupe': 'application/json',
+        },
+        method:'PUT',
+        body: {
+            'title': title,
+            'image': image,
+            'content': content
+        }
+    })
+}
+
+
 
 // 댓글 조회
 async function getComments(postId) {

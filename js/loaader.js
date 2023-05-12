@@ -49,4 +49,5 @@ async function injectNavbar() {
     }
 }
 ​
+
 injectNavbar();

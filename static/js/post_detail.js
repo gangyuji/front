@@ -1,8 +1,8 @@
-console.log("상세게시글 js 로드됨")
+console.log("상세게시글 js 로드됨")  
 
 let postId
 
-async function loadComments(postId) {
+async function loadComments(postId){
     const response = await getComments(postId);
     console.log(response)
 
@@ -12,14 +12,11 @@ async function loadComments(postId) {
     response.forEach(comment => {
 
         commentsList.innerHTML += `
-        <li class="media d-flex mt-2 mb-2 mr-2 border border-dark">
-        <img class="img-thumbnail" src="https://img.freepik.com/free-photo/cute-ai-generated-cartoon-bunny_23-2150288879.jpg" alt="profile img" width="50" height"50">
+        <li class="media d-flex">
+        <img class="mr-3" src="..." alt="profile img">
         <div class="media-body">
-            <h6 class="mt-1 mb-1 ms-1 me-1">${comment.user}</h6>
-            <span class="mt-1 mb-1 ms-1 me-1">${comment.comment}</span>
-        </div>
-        <div class="col d-grid gap-2 d-md-flex justify-content-end p-2">
-            <button type="button" class="btn btn-primary" onclick="deleteComment(${postId}, ${comment.id})">삭제</button>
+            <h5 class="mt-0 mb-1">${comment.user}</h5>
+            ${comment.comment}
         </div>
         </li>
         `
@@ -28,20 +25,17 @@ async function loadComments(postId) {
 
 }
 
-// 댓글 등록
-async function submitComment() {
+async function submitComment(){
     const commentElement = document.getElementById("new-comment")
     const newComment = commentElement.value
-    console.log(`댓글 내용: ${newComment}`)
-    const response = await createComment(postId, newComment)
+    const response = await postComment(postId, newComment)
     console.log(response)
     commentElement.value = ""
 
     loadComments(postId)
 }
 
-
-async function loadPosts() {
+async function loadPosts(){
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get("post_id");
     console.log(postId)
@@ -69,12 +63,34 @@ async function loadPosts() {
 
 }
 
-window.onload = async function () {
+
+
+// like
+
+function getLike(e) {
+    const like_cnt = document.getElementById('like').onclick == function() {
+        const cnt = 0;
+        like_cnt = cnt++;
+        like_cnt = like_cnt % 2 == 0 ? like_cnt+=1 : like_cnt-=1
+
+        num = parseInt(1)
+        if(like_cnt%2==0) {
+            like_cnt.innterText = "좋아요 " +  (count + num) + '개'
+        } else {
+            like_cnt.innterText = "좋아요 " +  (count - num) + '개'
+        }
+    }
+
+
+  
+}
+
+
+
+window.onload = async function (){
     const urlParams = new URLSearchParams(window.location.search);
     postId = urlParams.get("post_id");
-    // commentId = urlParams.get("comment_id");
     console.log(postId)
-    // console.log(commentId)
 
     await loadPosts(postId);
     await loadComments(postId);

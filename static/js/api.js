@@ -123,22 +123,16 @@ async function getFollowingPosts(categoryName) {
 }
 
 // 게시글 작성
-async function createPost(url) {
-    const urlParams = new URLSearchParams(url);
-    const category = urlParams.get("category");
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
-    const image = document.getElementById("image").files[0];
-    const star = document.getElementById("star").getAttribute("value");
-
+async function createPost() {
+    const title = document.getElementById("title").value
+    const content = document.getElementById("content").value
+    const image = document.getElementById("image").files[0]
 
     const formdata = new FormData();
 
-    formdata.append("category", category)
     formdata.append("title", title)
     formdata.append("content", content)
     formdata.append("image", image || '') // 이미지 안 올리면 폼데이터에 ''로 들어가게 함(이렇게 안 하면 undefined가 들어가서 400에러뜸)
-    formdata.append("star", star)
 
     let token = localStorage.getItem("access")
 
@@ -150,13 +144,14 @@ async function createPost(url) {
         body: formdata
     })
 
-    if (response.status == 200) {
+    if (response.status == 201) {
         alert("글 작성 완료!")
         window.location.replace(`${frontend_base_url}/`);
     } else {
         alert(response.statusText)
     }
 }
+
 
 // 상세 게시글 조회
 async function getPost(postId) {
@@ -170,6 +165,62 @@ async function getPost(postId) {
     }
 }
 
+// update
+async function handleUpdate(postId) {
+    const title = document.getElementById('post-title').value
+    const img = document.getElementById('post-image').value
+    const content = document.getElementById('post-content').value
+    console.log(title, img, content)
+
+    const response = await fetch(`${backend_base_url}/posts/${postId}/`, {
+        headers: {
+            'content-tupe': 'application/json',
+        },
+        method:'PUT',
+        body: JSON.stringify ({
+            'title': title,
+            'image': img,
+            'content': content
+        })
+    })
+
+    if (response.status == 200) {
+        alert("글 작성 완료")
+        window.location.replace('index.html')
+    } else if (title == '' || img == '' || content == '' ) {
+        alert("빈칸을 입력해 주세요.")
+    }
+}
+
+// delete
+async function deletePosts(postId) {
+    if(confirm("작성하신 게시물을 삭제하시겠습니까?")) {
+        let token = localStorage.getItem("access")
+
+        const response = await fetch(`${backend_base_url}/posts/${postId}/`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "id": postId
+            })
+        })
+
+        if (response.status == 204) {
+            alert("게시글 삭제 완료!")
+            loadComments(postId);
+        } else {
+            alert(response.statusText)
+        }
+    } else {
+        loadPosts(postId);
+    }
+}
+
+
+
 // 댓글 조회
 async function getComments(postId) {
     const response = await fetch(`${backend_base_url}/posts/${postId}/comments/`,)
@@ -182,8 +233,8 @@ async function getComments(postId) {
     }
 }
 
-// 등록된 댓글 DB에 저장
-async function createComment(postId, newComment) {
+//댓글 작성
+async function postComment(postId, newComment) {
 
     let token = localStorage.getItem("access")
 
@@ -203,63 +254,6 @@ async function createComment(postId, newComment) {
         response_json = await response.json()
         return response_json
     } else {
-        alert(response.statusText)
+        alert(response.status)
     }
 }
-
-// 댓글 수정
-async function modifyComment(postId, commentId) {
-    let newComment = prompt("수정할 댓글을 입력하세요."); // 수행할 댓글 수정 내용을 입력 받습니다.
-
-    if (newComment !== null) { // 수정 내용이 null 이 아닌 경우
-        let token = localStorage.getItem("access");
-
-        const response = await fetch(`${backend_base_url}/posts/${postId}/comments/${commentId}/`, {
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                "comment": newComment
-            })
-        });
-
-        if (response.status == 200) {
-            alert("댓글 수정이 완료되었습니다!");
-            loadComments(postId); // 댓글 목록을 다시 로드합니다.
-        } else {
-            alert(response.statusText);
-        }
-    } else { // 수정 내용이 null 인 경우
-        loadComments(postId);
-    }
-}
-
-//댓글 삭제
-async function deleteComment(postId, commentId) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-        let token = localStorage.getItem("access")
-
-        const response = await fetch(`${backend_base_url}/posts/${postId}/comments/${commentId}/`, {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                "id": commentId,
-            })
-        })
-
-        if (response.status == 204) {
-            alert("댓글 삭제 완료!")
-            loadComments(postId);
-        } else {
-            alert(response.statusText)
-        }
-    } else {
-        loadComments(postId);
-    }
-}
-

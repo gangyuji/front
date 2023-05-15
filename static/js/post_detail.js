@@ -206,11 +206,15 @@ window.onload = async function () {
 
     let count_like = 1
     for (let obj in response.like) {
-        console.log(response.like)
-        count_like += Number(obj)
+        if (obj=='0'){
+            count_like += Number(obj) + 1
+            }
+            else{
+            count_like += Number(obj)
+            }
     }
 
-    count.innerText = `${count_like}개`
+    count.innerText = `좋아요 ${count_like}개`
 
     const exist_post = await getPost(postId);
     console.log(exist_post)

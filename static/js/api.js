@@ -28,7 +28,7 @@ async function handleSignin() {
             "email": email,
             "name": realname || '',
             "age": age || 7,
-            "introduction": introduction || '',
+            "introduction": introduction || ''
         })
     })
 
@@ -220,10 +220,8 @@ async function updatePosts(url) {
 async function deletePosts(postId) {
     if (confirm("작성하신 게시물을 삭제하시겠습니까?")) {
         let token = localStorage.getItem("access")
-
-
+    }
     let token = localStorage.getItem("access")
-
     const response = await fetch(`${backend_base_url}/posts/${postId}/`, {
         headers: {
             'content-type': 'application/json',
@@ -255,15 +253,15 @@ async function getPost(postId) {
 
 
 // 프로필 수정
-async function getUser() {
-    try {
-        const response = await fetch('/api/users/profile');
-        const user = await response.json();
-        return user;
-    } catch (error) {
-        console.error(error);
-    }
-}
+// async function getUser() {
+//     try {
+//         const response = await fetch('/api/users/profile');
+//         const user = await response.json();
+//         return user;
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
 
 // 댓글 조회
 async function getComments(postId) {
@@ -346,7 +344,7 @@ async function deleteComment(postId, commentId) {
             body: JSON.stringify({
                 "id": commentId,
             })
-        })
+        });
 
         if (response.status == 204) {
             alert("댓글 삭제 완료!")
@@ -358,4 +356,3 @@ async function deleteComment(postId, commentId) {
         loadComments(postId);
     }
 }
-
